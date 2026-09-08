@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mnemonica — instance inheritance, made visible</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="description" content="Mnemonica is an instance-inheritance system for JavaScript/TypeScript, with a toolchain that makes types, their graph, and their runtime behavior visible — tactica, Mnemonica Graphica, dive, otel, strategy.">
+<style>
+	:root {
+		--bg        : #1e1e1e;
+		--panel     : #262626;
+		--edge      : #3a3a3a;
+		--text      : #d4d4d4;
+		--dim       : #9a9a9a;
+		--acid      : #40ff80;
+		--gold      : #f0c674;
+		--steel     : #7aa2f7;
+		--violet    : #b48ead;
+		--salmon    : #ff8a65;
+		--mono      : ui-monospace, "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+	}
+	* { box-sizing: border-box; }
+	body {
+		margin      : 0;
+		background  : var(--bg);
+		color       : var(--text);
+		font-family : -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		line-height : 1.6;
+	}
+	.wrap {
+		max-width : 880px;
+		margin    : 0 auto;
+		padding   : 48px 24px 64px;
+	}
+	h1, h2 { font-weight: 600; }
+	h1 {
+		font-size      : 2rem;
+		margin         : 0 0 8px;
+		letter-spacing : 0.01em;
+	}
+	h1 .psi { color: var(--acid); }
+	h2 {
+		font-size     : 1.15rem;
+		margin        : 56px 0 12px;
+		padding-bottom: 6px;
+		border-bottom : 1px solid var(--edge);
+		color         : var(--gold);
+	}
+	p { margin: 12px 0; }
+	a { color: var(--steel); text-decoration: none; }
+	a:hover { text-decoration: underline; }
+	code {
+		font-family  : var(--mono);
+		font-size    : 0.9em;
+		background   : #1a1a1a;
+		border       : 1px solid var(--edge);
+		border-radius: 4px;
+		padding      : 1px 6px;
+		color        : var(--acid);
+	}
+	pre {
+		font-family  : var(--mono);
+		font-size    : 0.9rem;
+		background   : #1a1a1a;
+		border       : 1px solid var(--edge);
+		border-radius: 8px;
+		padding      : 16px 20px;
+		overflow-x   : auto;
+		line-height  : 1.5;
+	}
+	pre code {
+		background : none;
+		border     : none;
+		padding    : 0;
+		color      : var(--text);
+	}
+	.tagline {
+		color     : var(--dim);
+		font-size : 1.05rem;
+		margin    : 0 0 32px;
+	}
+	.hero {
+		display       : block;
+		margin        : 28px 0 8px;
+		border        : 1px solid var(--edge);
+		border-radius : 10px;
+		overflow      : hidden;
+		background    : var(--panel);
+	}
+	.hero img {
+		display : block;
+		width   : 100%;
+		height  : auto;
+	}
+	.caption {
+		font-size : 0.85rem;
+		color     : var(--dim);
+		margin    : 8px 2px 0;
+	}
+	.caption b { color: var(--text); font-weight: 600; }
+	.grid {
+		display               : grid;
+		grid-template-columns : repeat(auto-fill, minmax(250px, 1fr));
+		gap                   : 12px;
+		margin-top            : 16px;
+	}
+	.card {
+		background    : var(--panel);
+		border        : 1px solid var(--edge);
+		border-radius : 8px;
+		padding       : 14px 16px;
+	}
+	.card h3 {
+		margin      : 0 0 6px;
+		font-size   : 0.98rem;
+		font-family : var(--mono);
+		font-weight : 600;
+	}
+	.card p {
+		margin    : 0;
+		font-size : 0.88rem;
+		color     : var(--dim);
+	}
+	.card .npm { color: var(--acid); }
+	.card .ext { color: var(--gold); }
+	.card .demo { color: var(--salmon); }
+	ol.steps { padding-left: 22px; }
+	ol.steps li { margin: 10px 0; }
+	footer {
+		margin-top : 64px;
+		padding-top: 16px;
+		border-top : 1px solid var(--edge);
+		font-size  : 0.85rem;
+		color      : var(--dim);
+	}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+	<h1><span class="psi">Ψ</span> Mnemonica</h1>
+	<p class="tagline">Instance inheritance for JavaScript &amp; TypeScript — and the toolchain that makes it visible.</p>
+
+	<p>
+		<strong>mnemonica</strong> is an instance-inheritance system: you declare types with
+		<code>define()</code>, and construct subtypes <em>from parent instances</em> —
+		<code>new instance.SubType(args)</code>. The prototype chain back to the root <em>is</em>
+		the identity of every object. On top of that runtime sits a full toolchain: static analysis
+		that gives runtime types real TypeScript types, a VS Code extension that draws the whole
+		graph in 3D, and tracing that follows a running application through its instances — all the
+		way into Jaeger.
+	</p>
+
+	<a class="hero" href="https://github.com/mythographica/tactica-nestjs">
+		<img src="https://raw.githubusercontent.com/mythographica/tactica-nestjs/refs/heads/main/screen.png"
+		     alt="Mnemonica Graphica 3D view of the tactica-nestjs demo app: colored spheres for types, diamonds for creation scopes, rings for dive wrap sites">
+	</a>
+	<p class="caption">
+		A real NestJS application drawn by <b>Mnemonica Graphica</b>: <b>spheres</b> are types (color = inheritance
+		generation), <b>diamonds</b> are the scopes that construct them, <b>rings</b> are dive wrap sites,
+		and the fibers between them are invocation and construction edges. Every element is draggable,
+		clickable, and jumps back into source.
+	</p>
+
+	<h2>The tools</h2>
+	<div class="grid">
+		<div class="card">
+			<h3><a href="https://github.com/wentout/mnemonica">mnemonica</a></h3>
+			<p>The runtime: <code>define()</code>, <code>lookup()</code>, <code>decorate()</code>, hooks, async constructors, error lineage. <span class="npm">npm: mnemonica</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/tactica">@mnemonica/tactica</a></h3>
+			<p>Static analysis that turns runtime definitions into TypeScript: emits <code>.tactica/</code> types, registry augmentation, usage and creation graphs. No casts, ever. <span class="npm">npm: @mnemonica/tactica</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/mnemographica">Mnemonica Graphica</a></h3>
+			<p>The VS Code extension: type trees, usages, flow, generations — and the interactive 3D graph with Live Trace of a running app. <span class="ext">VS Code Marketplace: mnemonica.mnemographica</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/dive">@mnemonica/dive</a></h3>
+			<p>Async context without AsyncLocalStorage: the instance <em>is</em> the context. Wrap callbacks, trace lineages, enrich errors. <span class="npm">npm: @mnemonica/dive</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/otel">@mnemonica/otel</a></h3>
+			<p>Framework-agnostic lifecycle instrumentation: mnemonica hooks → OpenTelemetry spans. <span class="npm">npm: @mnemonica/otel</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/nestjs">@mnemonica/nestjs</a></h3>
+			<p>The full NestJS wiring: exception filters, interceptors, ALS bridge, the embedded trace channel. <span class="npm">npm: @mnemonica/nestjs</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/strategy">@mnemonica/strategy</a></h3>
+			<p>MCP-shaped server and WS channels: live-craft (define and swap constructors without a restart), trace streaming. <span class="npm">npm: @mnemonica/strategy</span></p>
+		</div>
+		<div class="card">
+			<h3><a href="https://github.com/mythographica/tactica-nestjs">tactica-nestjs</a></h3>
+			<p>The demo app from the screenshot — a small NestJS project wired with the whole ecosystem, <code>.tactica/</code> committed. <span class="demo">clone &amp; explore</span></p>
+		</div>
+	</div>
+
+	<h2>Take a look</h2>
+	<ol class="steps">
+		<li>Install <strong>Mnemonica Graphica</strong> in VS Code — search <code>mnemonica</code> in the Marketplace, or grab the repo.</li>
+		<li>Clone the demo and open it:
+			<pre><code>git clone https://github.com/mythographica/tactica-nestjs
+code tactica-nestjs</code></pre>
+		</li>
+		<li>Click the <code>Ψ</code> icon in the activity bar — Types, Usages, Flow, By Generation, Diamonds and Bagels are already populated (<code>.tactica/</code> is committed, so this works from a fresh clone).</li>
+		<li>Command Palette → <code>Mnemonica: Ψ 3D</code> — the scene from the screenshot, live. Drag spheres, diamonds and rings; Save keeps your arrangement.</li>
+		<li>Want it moving? <code>npm install &amp;&amp; npm run start:dev</code> in the demo, then <code>Mnemonica: Ψ App Channel</code> → <strong>Discover &amp; Connect</strong> — Live Trace lights up, and <code>npm run jaegger:pre-configured</code> brings up Jaeger with links that jump back into VS Code.</li>
+	</ol>
+
+	<footer>
+		<p>
+			Runtime: <a href="https://github.com/wentout/mnemonica">wentout/mnemonica</a> ·
+			Tooling: <a href="https://github.com/mythographica">github.com/mythographica</a> ·
+			Packages: <a href="https://www.npmjs.com/org/mnemonica">npm @mnemonica</a>
+		</p>
+	</footer>
+
+</div>
+</body>
+</html>
